@@ -1,0 +1,85 @@
+import csv
+import pandas as pd
+import matplotlib.pyplot as plt
+
+fields=['Student ID','Name','Class Roll Number','Batch ID']
+filename="STUDENT.csv"
+y=[]
+mylabels=[]
+with open(filename,'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    csvwriter.writerow(fields)
+    marks={}
+    while True:
+        ide=input("Enter Student ID: ")
+        name=input("Enter Name of the Student: ")
+        roll=input("Enter Class Roll Number: ")
+        bchID=input("Enter Batch ID: ")
+        dicto=[]
+        while True:
+            cn=input("Enter Name of the course: ")
+            m=input("Enter Marks obtained: ")
+            g=''
+            pf=''
+            if int(m)>=90:
+                g='A'
+                pf='PASS'
+            elif int(m)>=80:
+                g='B'
+                pf='PASS'
+            elif int(m)>=70:
+                g='C'
+                pf='PASS'
+            elif int(m)>=60:
+                g='D'
+                pf='PASS'
+            elif int(m)>=50:
+                g='E'
+                pf='PASS'
+            else:
+                g='F'
+                pf='FAIL'
+            dicto.append([cn,m,g,pf])
+            chs = int(input("Enter 0 to exit: "))
+            if chs==0:
+                break
+        csvwriter.writerow([ide,name,roll,bchID])
+        marks[name]=dicto
+        mylabels.append(name)
+        s=0
+        for i in range(len(dicto)):
+            s=s+int(dicto[i][1])
+        s=s/len(dicto)
+        y.append(s)
+        ch = int(input("Enter 0 to exit: "))
+        if ch==0:
+            break
+
+data = pd.read_csv('STUDENT.csv')
+df=pd.DataFrame(data)
+st=input("Enter the Name of the Student you want to delete: ")
+row=df[df['Name']==st].index
+data=data.drop(labels=row,axis=0,inplace=False)
+
+
+liste=df.values.tolist()
+for x in range(len(liste)):
+    txt=[['Id: ',liste[x][0],'\n'],['Name: ',liste[x][1],'\n'],['Roll NO: ',liste[x][2],'\n'],['Batch Id: ',liste[x][3],'\n']]
+    txt1=["Student Details: \n"]
+    for i in range(len(txt)):
+        txt1.append(''.join(str(e) for e in txt[i]))
+    txt1.append("Course Name\tMarks \tGrade\n")
+    list2=marks[liste[x][1]]
+    for i in range(len(list2)):
+        txt1.append('\t\t'.join(str(e) for e in list2[i]))
+        txt1.append('\n')
+
+    
+    filename1="myfile"+str(x)+".txt"
+    file=open(filename1,"w")
+    file.writelines(txt1)
+    file.close()
+
+
+
+
